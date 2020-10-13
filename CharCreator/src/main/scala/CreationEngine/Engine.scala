@@ -1,0 +1,100 @@
+package CreationEngine
+
+import java.io.FileNotFoundException
+
+import scala.io.{Source, StdIn}
+import scala.sys.exit
+
+
+object Engine extends App {
+  def newCharacter: Unit = {
+    println("Enter your new character's name:")
+    var newName: String = StdIn.readLine()
+    newName = newName.toLowerCase.split(' ').map(_.capitalize).mkString(" ")
+    println("Choose a class:")
+    println("1. Warrior")
+    println("2. Mage")
+    println("3. Rogue")
+    StdIn.readLine() match{
+      case "1" => val name = new newWarrior(newName)
+        name.charSheet()
+        name.LevelUp(10)
+      case "2" => val name = new newMage(newName)
+        name.charSheet()
+        name.LevelUp(10)
+      case "3" => val name = new newRogue(newName)
+        name.charSheet()
+        name.LevelUp(10)
+      case e => {
+        println("Command not recognized")
+        println("")
+        newCharacter
+      }
+    }
+}
+
+  def importChar {
+    println("What is the name of the character you wish to import? ")
+    val importName = StdIn.readLine()
+    val fileName: String = s"${importName.split(" ").map(_.trim).mkString("").toLowerCase}.csv"
+    try {
+      for (line <- Source.fromFile(fileName).getLines()) {
+        val cols = line.split(",").map(_.trim)
+        val name = new Character(cols(0), cols(1))
+        name.attrStrength = cols(2).toInt
+        name.attrDexterity = cols(3).toInt
+        name.attrMagic = cols(4).toInt
+        name.attrSpeech = cols(5).toInt
+        name.charSheet()
+        menuOrExit()
+      }
+    } catch {
+      case fnf : FileNotFoundException => println("Could not find Character.")
+    }
+  }
+
+  def newOrImport(): Unit = {
+    println("What would you like to do?")
+    println("1. Create a new character")
+    println("2. Import an existing character")
+    println("3. Exit the character creator")
+    StdIn.readLine() match {
+      case "1" => {
+        newCharacter
+      }
+      case "2" => {
+       importChar
+        }
+      case "3" => {
+        println("Thanks for using the Character Creation Engine!")
+        exit(0)
+      }
+      case e => {
+        println("Invalid input.")
+        newOrImport()
+      }
+    }
+  }
+
+  def menuOrExit(): Unit = {
+    println("Enter 1 to return to the main menu or 2 to exit")
+    StdIn.readLine() match {
+      case "1" => newOrImport()
+      case "2" => {
+        println("Thanks for using the Character Creation Engine!")
+        exit(0)
+        }
+      case e => {
+        println("Invalid Input")
+        menuOrExit()
+      }
+      }
+    }
+
+
+  println("Welcome to the Character Creation Engine v.1.0!")
+  println()
+  Thread.sleep(2500)
+  newOrImport()
+
+}
