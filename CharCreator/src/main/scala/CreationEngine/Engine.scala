@@ -28,12 +28,15 @@ object Engine extends App {
     StdIn.readLine() match{
       case "1" => val name = new newWarrior(newName)
         name.charSheet()
+        name.cleave()
         name.LevelUp(10)
       case "2" => val name = new newMage(newName)
         name.charSheet()
+        name.fireball()
         name.LevelUp(10)
       case "3" => val name = new newRogue(newName)
         name.charSheet()
+        name.twinDaggers()
         name.LevelUp(10)
       case e => {
         println("Invalid input.")
@@ -62,7 +65,12 @@ object Engine extends App {
             name.attrMagic = cols(4).toInt
             name.attrSpeech = cols(5).toInt
             name.charSheet()
-            menuOrExit()
+            if (name.charClass == "Mage") name.fireball();
+            else if (name.charClass == "Warrior") name.cleave();
+            else name.twinDaggers()
+            println("---------------------------------------------------")
+            println()
+            name.exportSave
           }
         } catch {
           case fnf: FileNotFoundException => println("Could not find Character.")
@@ -78,7 +86,12 @@ object Engine extends App {
           name.attrMagic = cols2(4).toInt
           name.attrSpeech = cols2(5).toInt
           name.charSheet
-          Thread.sleep(2000)
+          if (name.charClass == "Mage") name.fireball();
+          else if (name.charClass == "Warrior") name.cleave();
+          else name.twinDaggers()
+          println("---------------------------------------------------")
+          println()
+
           name.Save
         } catch {
           case e => println("Character not found.")

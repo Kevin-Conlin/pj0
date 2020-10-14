@@ -2,7 +2,7 @@ package CreationEngine
 
 import java.io.File
 
-import CreationEngine.Engine.{collection, exportCharacter, getCharacter, menuOrExit, newOrImport}
+import CreationEngine.Engine.{collection, exportCharacter, getCharacter, menuOrExit, newOrImport, transformCharacter}
 import org.mongodb.scala.model.{Filters, UpdateOptions}
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Updates._
@@ -46,10 +46,10 @@ class Character(val name: String = "", val charClass: String = "") {
     println(s"Magic Attack: ${statMagicAttack} | Magic Defense: ${statMagicDefense}")
     println(s"Critical Chance: ${statCriticalChance}% | Critical Damage: +${statCriticalDam}%")
     println()
-    /*println("Spells/Abilities")
+    println("Spells/Abilities")
     println("----------------")
-    println()*/
-    }
+    println()
+  }
 
   def LevelUp(x: Int): Unit = {
     var statHealth = (50 + (attrStrength) * 10 + (attrDexterity) * 5)
@@ -103,7 +103,11 @@ class Character(val name: String = "", val charClass: String = "") {
       }
     }
     charSheet()
-    //spellOrAbility1()
+    if (charClass == "Mage") fireball();
+    else if (charClass == "Warrior") cleave();
+    else twinDaggers()
+    println("---------------------------------------------------")
+    println()
     Save()
   }
 
@@ -145,7 +149,7 @@ class Character(val name: String = "", val charClass: String = "") {
     StdIn.readLine()
     match {
       case "y" => {
-            collection.updateOne(equal("Name", name), combine(set("Class", charClass), set("Strength", attrStrength.toString), set("Dexterity", attrDexterity.toString), set("Magic", attrMagic.toString), set("Speech", attrSpeech.toString)), upsertTrue)
+            exportCharacter(collection.updateMany(equal("Name", name), combine(set("Class", charClass), set("Strength", attrStrength.toString), set("Dexterity", attrDexterity.toString), set("Magic", attrMagic.toString), set("Speech", attrSpeech.toString)), upsertTrue))
             println("Your character has been saved!")
               menuOrExit()
             }
@@ -163,8 +167,18 @@ class Character(val name: String = "", val charClass: String = "") {
     }
   }
 
-  def spellOrAbility1(): Unit = {
-  println()
+  def fireball(): Unit = {
+    println(s"Fireball: \nCost: 20 Magicka \nThe caster unleashes a ball of fire toward the targeted enemy\nthat deals ${50 * ((attrMagic * 7)*4/100)} damage minus half the target's\nMagicDefense.")
+    println()
   }
 
+  def twinDaggers(): Unit = {
+      println(s"Twin Daggers: \nCost: 20 Stamina \nThe player attacks with three strikes in rapid succession.\nEach attack deals ${(attrStrength * 5) + (attrDexterity * 2)/2.5} damage minus half the target's\nPhysical Defense.")
+      println()
+    }
+
+  def cleave(): Unit = {
+    println(s"Cleave: \nCost: 20 Stamina \nThe player attacks with a heavy two-handed swing\nthat deals ${50 * ((((attrStrength * 5) + (attrDexterity * 2)) + (attrStrength)*4)/100)} damage minus half the target's\nPhysical Defense.")
+    println()
+  }
 }
