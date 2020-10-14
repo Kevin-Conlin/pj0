@@ -1,10 +1,16 @@
 package CreationEngine
 
 import java.io.File
-import CreationEngine.Engine.{collection, exportCharacter, menuOrExit}
+
+import CreationEngine.Engine.{collection, exportCharacter, getCharacter, menuOrExit, newOrImport}
+import org.mongodb.scala.model.{Filters, UpdateOptions}
+import org.mongodb.scala.model.Filters.equal
+import org.mongodb.scala.model.Updates._
+
 import scala.io.StdIn
 
 class Character(val name: String = "", val charClass: String = "") {
+  val upsertTrue = (new UpdateOptions().upsert(true))
 
   var attrStrength = 0
   var attrDexterity = 0
@@ -121,29 +127,36 @@ class Character(val name: String = "", val charClass: String = "") {
             header.foreach(p.print)
             list.foreach(p.print)
         }
-        exportSave
       }
       case "n" => {
         println("Character not saved.")
         println()
-        menuOrExit()
       }
       case e => {
         println("Invalid input.")
         Save()
       }
     }
+    exportSave()
   }
 
   def exportSave(): Unit = {
-    println("Export character to Mongo Database? (y or n)")
+    println("Export character to Mongo Database? (y or n)\n*WARNING* This will overwrite any character's stored in the database with the same name.")
     StdIn.readLine()
     match {
       case "y" => {
-        exportCharacter(collection.insertOne(Import(name, charClass, attrStrength.toString, attrDexterity.toString, attrMagic.toString, attrSpeech.toString)))
-        println("Your character has been saved!")
-        menuOrExit()
-      }
+            collection.updateOne(equal("Name", name), combine(set("Class", charClass), set("Strength", attrStrength.toString), set("Dexterity", attrDexterity.toString), set("Magic", attrMagic.toString), set("Speech", attrSpeech.toString)), upsertTrue)
+            println("Your character has been saved!")
+              menuOrExit()
+            }
+            case "n" => {
+            println ("Character not overwritten")
+            newOrImport
+              }
+            case e => {
+              print("Invalid input.")
+              exportSave()
+            }
       case "n" => menuOrExit
       case e => println("Invalid input.")
         exportSave
