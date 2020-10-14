@@ -1,12 +1,8 @@
 package CreationEngine
 
 import java.io.File
-
 import CreationEngine.Engine.{collection, exportCharacter, menuOrExit}
-
-
 import scala.io.StdIn
-
 
 class Character(val name: String = "", val charClass: String = "") {
 
@@ -14,11 +10,6 @@ class Character(val name: String = "", val charClass: String = "") {
   var attrDexterity = 0
   var attrMagic = 0
   var attrSpeech = 0
-
-  def welcomeMessage(name: String = name, charClass: String = charClass) = {
-    println(s"Welcome ${name}!")
-    println("")
-  }
 
   def charSheet(): Unit = {
     var statHealth = (50 + (attrStrength) * 10 + (attrDexterity) * 3)
@@ -100,13 +91,13 @@ class Character(val name: String = "", val charClass: String = "") {
           points = (points - 1)
         }
         case e => {
-          println("Invalid input")
+          println("Invalid input.")
           LevelUp(points)
         }
       }
     }
     charSheet()
-    spellOrAbility1()
+    //spellOrAbility1()
     Save()
   }
 
@@ -131,8 +122,7 @@ class Character(val name: String = "", val charClass: String = "") {
             list.foreach(p.print)
         }
         exportSave
-        }
-
+      }
       case "n" => {
         println("Character not saved.")
         println()
@@ -146,7 +136,7 @@ class Character(val name: String = "", val charClass: String = "") {
   }
 
   def exportSave(): Unit = {
-    println("Export character to Mongo Database?")
+    println("Export character to Mongo Database? (y or n)")
     StdIn.readLine()
     match {
       case "y" => {
@@ -155,7 +145,7 @@ class Character(val name: String = "", val charClass: String = "") {
         menuOrExit()
       }
       case "n" => menuOrExit
-      case e => println("Invalid input")
+      case e => println("Invalid input.")
         exportSave
     }
   }
@@ -165,7 +155,3 @@ class Character(val name: String = "", val charClass: String = "") {
   }
 
 }
-
-
-
-

@@ -1,6 +1,5 @@
 package CreationEngine
 
-
 class newWarrior(override val name: String,
               override val charClass: String = "Warrior")
               extends Character(name, charClass) {
