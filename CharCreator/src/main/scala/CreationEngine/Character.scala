@@ -1,23 +1,11 @@
 package CreationEngine
 
-import java.io.{File, FileNotFoundException}
+import java.io.File
 
-import CreationEngine.Engine.{menuOrExit, newCharacter, newOrImport}
-import org.mongodb.scala.{MongoClient, MongoCollection, Observable}
-import org.mongodb.scala.bson.codecs.Macros._
-import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
+import CreationEngine.Engine.{collection, exportCharacter, menuOrExit}
 
-import scala.io.{Source, StdIn}
 
-//val codecRegistry = fromRegistries(fromProviders(classOf[dbImport]), Mongo.Client.DEFAULT_CODEC_REGIRTRY
-//val db = client.getDatabase("characterdb").withCodecRegistry(codecRegistry)
-//val collection : MongoCollection[dbImport] = db.getCollection("characters")
-/* def getResults[T](obs: Observable[T]): Seq[T] = {
-      Await.result(obs.toFuture(), Duration(18, SECONDS))
-   }
-   def printResults[T](obs: Observable[T]): Unit = {
-      getResults(obs).foreach(println(_))
- */
+import scala.io.StdIn
 
 
 class Character(val name: String = "", val charClass: String = "") {
@@ -132,19 +120,19 @@ class Character(val name: String = "", val charClass: String = "") {
   }
 
   def Save(): Unit = {
-    println("Would you like to save your character locally? (y or n)\n*WARNING* This will overwrite any local saves with the same character name.")
+    println("Would you like to save your character? (y or n)\n*WARNING* This will overwrite any local saves with the same character name.")
     StdIn.readLine() match {
       case "y" => {
-        val header = List[String]("Name",",","Class",",","Strength",",","Dexterity",",","Magic",",","Speech\n")
-        val list = List[String](name,",", charClass,",", attrStrength.toString,",", attrDexterity.toString,",", attrMagic.toString,",", attrSpeech.toString)
+        val header = List[String]("Name", ",", "Class", ",", "Strength", ",", "Dexterity", ",", "Magic", ",", "Speech\n")
+        val list = List[String](name, ",", charClass, ",", attrStrength.toString, ",", attrDexterity.toString, ",", attrMagic.toString, ",", attrSpeech.toString)
         printToFile(new File(s"${name.split(" ").map(_.trim).mkString("").toLowerCase}.csv")) {
-          p => header.foreach(p.print)
+          p =>
+            header.foreach(p.print)
             list.foreach(p.print)
         }
-        val client = MongoClient
-        println("Your character has been saved!")
-        menuOrExit()
-      }
+        exportSave
+        }
+
       case "n" => {
         println("Character not saved.")
         println()
@@ -154,6 +142,21 @@ class Character(val name: String = "", val charClass: String = "") {
         println("Invalid input.")
         Save()
       }
+    }
+  }
+
+  def exportSave(): Unit = {
+    println("Export character to Mongo Database?")
+    StdIn.readLine()
+    match {
+      case "y" => {
+        exportCharacter(collection.insertOne(Import(name, charClass, attrStrength.toString, attrDexterity.toString, attrMagic.toString, attrSpeech.toString)))
+        println("Your character has been saved!")
+        menuOrExit()
+      }
+      case "n" => menuOrExit
+      case e => println("Invalid input")
+        exportSave
     }
   }
 

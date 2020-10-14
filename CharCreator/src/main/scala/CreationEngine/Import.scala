@@ -3,6 +3,7 @@ package CreationEngine
 
 
 import org.bson.types.ObjectId
+import org.mongodb.scala.bson.collection.immutable.Document
 
 case class Import(_id: ObjectId, Name: String, Class: String, Strength: String, Dexterity: String, Magic: String, Speech: String){}
 
