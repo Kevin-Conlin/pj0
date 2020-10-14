@@ -3,9 +3,21 @@ package CreationEngine
 import java.io.{File, FileNotFoundException}
 
 import CreationEngine.Engine.{menuOrExit, newCharacter, newOrImport}
-import org.mongodb.scala.MongoClient
+import org.mongodb.scala.{MongoClient, MongoCollection, Observable}
+import org.mongodb.scala.bson.codecs.Macros._
+import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 
 import scala.io.{Source, StdIn}
+
+//val codecRegistry = fromRegistries(fromProviders(classOf[dbImport]), Mongo.Client.DEFAULT_CODEC_REGIRTRY
+//val db = client.getDatabase("characterdb").withCodecRegistry(codecRegistry)
+//val collection : MongoCollection[dbImport] = db.getCollection("characters")
+/* def getResults[T](obs: Observable[T]): Seq[T] = {
+      Await.result(obs.toFuture(), Duration(18, SECONDS))
+   }
+   def printResults[T](obs: Observable[T]): Unit = {
+      getResults(obs).foreach(println(_))
+ */
 
 
 class Character(val name: String = "", val charClass: String = "") {
@@ -14,7 +26,6 @@ class Character(val name: String = "", val charClass: String = "") {
   var attrDexterity = 0
   var attrMagic = 0
   var attrSpeech = 0
-
 
 
   def welcomeMessage(name: String = name, charClass: String = charClass) = {
@@ -51,6 +62,9 @@ class Character(val name: String = "", val charClass: String = "") {
     println(s"Magic Attack: ${statMagicAttack} | Magic Defense: ${statMagicDefense}")
     println(s"Critical Chance: ${statCriticalChance}% | Critical Damage: +${statCriticalDam}%")
     println()
+    /*println("Spells/Abilities")
+    println("----------------")
+    println()*/
     }
 
   def LevelUp(x: Int): Unit = {
@@ -105,6 +119,7 @@ class Character(val name: String = "", val charClass: String = "") {
       }
     }
     charSheet()
+    spellOrAbility1()
     Save()
   }
 
@@ -118,12 +133,14 @@ class Character(val name: String = "", val charClass: String = "") {
   }
 
   def Save(): Unit = {
-    println("Would you like to save your character? *Warning* This will overwrite any Character of the same name. (y or n)")
+    println("Would you like to save your character locally? (y or n)\n*WARNING* This will overwrite any local saves with the same character name.")
     StdIn.readLine() match {
       case "y" => {
-        val list = List[String](name, ",", charClass, ",", attrStrength.toString, ",", attrDexterity.toString, ",", attrMagic.toString, ",", attrSpeech.toString)
-        printToFile(new File(s"${name.split(" ").map(_.trim).mkString("").toLowerCase}.csv")) { p =>
-          list.foreach(p.print)
+        val header = List[String]("Name",",","Class",",","Strength",",","Dexterity",",","Magic",",","Speech\n")
+        val list = List[String](name,",", charClass,",", attrStrength.toString,",", attrDexterity.toString,",", attrMagic.toString,",", attrSpeech.toString)
+        printToFile(new File(s"${name.split(" ").map(_.trim).mkString("").toLowerCase}.csv")) {
+          p => header.foreach(p.print)
+            list.foreach(p.print)
         }
         val client = MongoClient
         println("Your character has been saved!")
@@ -139,6 +156,10 @@ class Character(val name: String = "", val charClass: String = "") {
         Save()
       }
     }
+  }
+
+  def spellOrAbility1(): Unit = {
+  println()
   }
 
 }
