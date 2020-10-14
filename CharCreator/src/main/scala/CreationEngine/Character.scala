@@ -27,7 +27,6 @@ class Character(val name: String = "", val charClass: String = "") {
   var attrMagic = 0
   var attrSpeech = 0
 
-
   def welcomeMessage(name: String = name, charClass: String = charClass) = {
     println(s"Welcome ${name}!")
     println("")

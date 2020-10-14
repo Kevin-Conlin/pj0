@@ -16,10 +16,6 @@ import scala.sys.exit
 
 object Engine extends App {
 
-
-
-
-
   def newCharacter: Unit = {
     println("Enter your new character's name:")
     var newName: String = StdIn.readLine()
@@ -143,12 +139,9 @@ object Engine extends App {
       }
     }
 
-
   println("Welcome to the Character Creation Engine v.1.0!")
   println()
   Thread.sleep(1500)
   newOrImport()
-
-
 
 }
