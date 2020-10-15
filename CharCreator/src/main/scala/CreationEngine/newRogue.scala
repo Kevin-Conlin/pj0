@@ -9,7 +9,6 @@ class newRogue(override val name: String,
   attrMagic = 0
   attrSpeech = 8
 
-
 }
 
 
