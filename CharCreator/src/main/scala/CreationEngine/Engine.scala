@@ -2,7 +2,6 @@ package CreationEngine
 
 import java.io.FileNotFoundException
 
-import CreationEngine.Engine.newOrImport
 import org.mongodb.scala.{MongoClient, MongoCollection, Observable}
 import org.mongodb.scala.bson.codecs.Macros._
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
@@ -30,18 +29,22 @@ object Engine extends App {
     println("1. Warrior")
     println("2. Mage")
     println("3. Rogue")
+    println()
     StdIn.readLine() match{
       case "1" => val name = new newWarrior(newName)
         name.charSheet()
         name.cleave()
+        println("============================================")
         name.LevelUp(10)
       case "2" => val name = new newMage(newName)
         name.charSheet()
         name.fireball()
+        println("============================================")
         name.LevelUp(10)
       case "3" => val name = new newRogue(newName)
         name.charSheet()
         name.twinDaggers()
+        println("============================================")
         name.LevelUp(10)
       case e => {
         println("Invalid input.")
@@ -52,13 +55,17 @@ object Engine extends App {
   }
 
   def importChar: Unit = {
+    println("===================================")
     println("1. Import a locally saved character")
     println("2. Import from MongoDB")
     println("3. Return to main menu")
+    println("===================================")
+    println()
     StdIn.readLine()
     match {
       case "1" => {
         println("What is the name of the character you wish to import? ")
+        println()
         val importName = StdIn.readLine()
         val fileName: String = s"${importName.split(" ").map(_.trim).mkString("").toLowerCase}.csv"
         try {
@@ -73,12 +80,15 @@ object Engine extends App {
             if (name.charClass == "Mage") name.fireball();
             else if (name.charClass == "Warrior") name.cleave();
             else name.twinDaggers()
-            println("---------------------------------------------------")
+            println("============================================")
             println()
             name.exportSave()
           }
         } catch {
-          case fnf: FileNotFoundException => println("Character not found.")
+          case fnf: FileNotFoundException =>
+            println()
+            println("Character not found.")
+            println()
             importChar
         }
       }
@@ -94,27 +104,34 @@ object Engine extends App {
           if (name.charClass == "Mage") name.fireball();
           else if (name.charClass == "Warrior") name.cleave();
           else name.twinDaggers()
-          println("---------------------------------------------------")
+          println("============================================")
           println()
-
           name.Save
         } catch {
-          case e => println("Character not found.")
+          case e: Exception =>
+            println()
+            println("Character not found.")
             println()
             newOrImport
         }
       }
-      case "3" => newOrImport
+      case "3" => println()
+        newOrImport
       case e => println("Invalid input.")
+        println()
+        importChar
       }
   }
 
   def newOrImport: Unit = {
+    println("=================================")
     println("What would you like to do?")
     println("1. Create a new character")
     println("2. Import an existing character")
     println("3. Delete character from MongoDB")
     println("4. Exit the character creator")
+    println("=================================")
+    println()
     StdIn.readLine() match {
       case "1" => {
         newCharacter
@@ -126,7 +143,10 @@ object Engine extends App {
        deleteCharacter
       }
       case "4" => {
+        println("===============================================")
         println("Thanks for using the Character Creation Engine!")
+        println("===============================================")
+        println()
         exit(0)
       }
       case e => {
@@ -137,17 +157,24 @@ object Engine extends App {
   }
 
   def menuOrExit: Unit = {
+    println("===============================================")
     println("Enter 1 to return to the main menu or 2 to exit")
+    println("===============================================")
+    println()
     StdIn.readLine() match {
       case "1" => newOrImport
       case "2" => {
+        println("===============================================")
         println("Thanks for using the Character Creation Engine!")
+        println("===============================================")
+        println()
         exit(0)
         }
       case e => {
         println("Invalid Input.")
+        println()
         menuOrExit
-      }
+        }
       }
     }
 
@@ -157,9 +184,11 @@ object Engine extends App {
 
   def deleteCharacter: Unit = {
     println("What is the name of the Character you wish to delete?")
-    val importName = StdIn.readLine().toLowerCase().capitalize
+    println()
+    val importName = StdIn.readLine().toLowerCase.split(' ').map(_.capitalize).mkString(" ")
     if (getCharacter(collection.find(equal("Name", importName))).length > 0) {
       println("Are you sure you want to delete this character? (y or n)")
+      println()
       StdIn.readLine()
       match {
         case "y" => getCharacter(collection.deleteMany(Filters.equal("Name", importName)))
@@ -173,14 +202,16 @@ object Engine extends App {
           deleteCharacter
       }
     } else
-        println("Character not found.")
-        println()
-        newOrImport
+      println()
+      println("Character not found.")
+      println()
+      newOrImport
   }
 
   def transformCharacter[T](): List[String] = {
-    println("What is the name of the Character you wish to import? ")
-    val importName = StdIn.readLine().toLowerCase().capitalize
+    println("What is the name of the Character you wish to import?")
+    println()
+    val importName = StdIn.readLine().toLowerCase.split(' ').map(_.capitalize).mkString(" ")
     val string = getCharacter(collection.find(equal("Name", importName))).toString.stripSuffix("))")
     val list = string.split(",")
     val list1 = list.dropWhile(list.indexOf(_) < list.indexOf(importName))
@@ -189,7 +220,10 @@ object Engine extends App {
   }
 
   Thread.sleep(2000)
+  println()
+  println("===============================================")
   println("Welcome to the Character Creation Engine v.1.0!")
+  println("===============================================")
   println()
   Thread.sleep(1500)
   newOrImport
