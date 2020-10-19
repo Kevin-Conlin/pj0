@@ -23,43 +23,48 @@ object Engine extends App {
   val pattern = "(\\W)".r
 
   def newCharacter: Unit = {
-    println("Enter your new character's name:")
+    println("Enter your new character's name (or enter 'menu' to return to the menu):")
     var newName: String = StdIn.readLine()
-    if (pattern.findFirstIn(newName) != None){
-      println("Invalid Name.")
-      println("(Names may only contain letters, numbers and underscores)")
-      println()
-      newCharacter
-    }
-    newName = newName.toLowerCase.split("_").map(_.capitalize).mkString("_")
-    println("Choose a class:")
-    println("1. Warrior")
-    println("2. Mage")
-    println("3. Rogue")
-    println()
-    StdIn.readLine() match{
-      case "1" => val name = new newWarrior(newName)
-        name.charSheet()
-        name.cleave()
-        println("============================================")
-        name.LevelUp(10)
-      case "2" => val name = new newMage(newName)
-        name.charSheet()
-        name.fireball()
-        println("============================================")
-        name.LevelUp(10)
-      case "3" => val name = new newRogue(newName)
-        name.charSheet()
-        name.twinDaggers()
-        println("============================================")
-        name.LevelUp(10)
-      case e => {
-        println("Invalid input.")
-        println("")
+    if (newName == "menu") {
+      newOrImport
+    } else {
+      if (pattern.findFirstIn(newName) != None) {
+        println("Invalid Name.")
+        println("(Names may only contain letters, numbers and underscores)")
+        println()
         newCharacter
+      }
+      newName = newName.toLowerCase.split("_").map(_.capitalize).mkString("_")
+      println("Choose a class:")
+      println("1. Warrior")
+      println("2. Mage")
+      println("3. Rogue")
+      println()
+      StdIn.readLine() match {
+        case "1" => val name = new newWarrior(newName)
+          name.charSheet()
+          name.cleave()
+          println("============================================")
+          name.LevelUp(10)
+        case "2" => val name = new newMage(newName)
+          name.charSheet()
+          name.fireball()
+          println("============================================")
+          name.LevelUp(10)
+        case "3" => val name = new newRogue(newName)
+          name.charSheet()
+          name.twinDaggers()
+          println("============================================")
+          name.LevelUp(10)
+        case e => {
+          println("Invalid input.")
+          println("")
+          newCharacter
+        }
       }
     }
   }
+
 
   def importChar: Unit = {
     println("===================================")
@@ -125,7 +130,7 @@ object Engine extends App {
             println()
             println("Character not found.")
             println()
-            newOrImport
+            importChar
         }
       }
       case "3" => println()
@@ -196,7 +201,7 @@ object Engine extends App {
   }
 
   def deleteCharacter: Unit = {
-    println("What is the name of the Character you wish to delete?")
+    println("What is the name of the character you wish to delete?")
     println()
     val importName = StdIn.readLine().toLowerCase.split('_').map(_.capitalize).mkString("_")
     if (pattern.findFirstIn(importName) != None){
@@ -228,7 +233,7 @@ object Engine extends App {
   }
 
   def transformCharacter[T](): List[String] = {
-    println("What is the name of the Character you wish to import?")
+    println("What is the name of the character you wish to import?")
     println()
     val importName = StdIn.readLine().toLowerCase.split('_').map(_.capitalize).mkString("_")
     if (pattern.findFirstIn(importName) != None) {

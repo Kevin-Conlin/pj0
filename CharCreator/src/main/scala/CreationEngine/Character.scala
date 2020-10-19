@@ -215,7 +215,7 @@ class Character(val name: String = "", val charClass: String = "") {
   }
 
   def fireball(): Unit = {
-    println(s"Fireball: \nCost: 20 Magicka \nThe caster unleashes a ball of fire toward the targeted enemy\nthat deals ${50 * ((attrMagic * 7)*4/100)} damage minus half the target's\nMagicDefense.")
+    println(s"Fireball: \nCost: 20 Magicka \nThe caster unleashes a ball of fire toward the targeted enemy\nthat deals ${50 * ((attrMagic * 7)*4/100)} damage minus half the target's\nMagic Defense.")
     println()
   }
 
