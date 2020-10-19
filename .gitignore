@@ -24,5 +24,3 @@ target/
 .scala_dependencies
 .worksheet
 .csv
-.bsp
-project/
