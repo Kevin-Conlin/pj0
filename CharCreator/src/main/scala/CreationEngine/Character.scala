@@ -7,6 +7,7 @@ import org.mongodb.scala.model.{Filters, UpdateOptions}
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Updates._
 
+import scala.Console.println
 import scala.io.StdIn
 
 class Character(val name: String = "", val charClass: String = "") {
@@ -192,6 +193,24 @@ class Character(val name: String = "", val charClass: String = "") {
         println("Invalid input.")
         println()
         exportSave
+    }
+  }
+
+  def levelOrSave: Unit = {
+    println("===================================")
+    println("1. Level up character")
+    println("2. Save character")
+    println("3. Return to main menu")
+    println("===================================")
+    println()
+    StdIn.readLine()
+    match {
+      case "1" => LevelUp(5)
+        Save()
+      case "2" => Save()
+      case "3" => newOrImport
+      case e => println("Invalid input.")
+        levelOrSave
     }
   }
 

@@ -95,7 +95,7 @@ object Engine extends App {
             else name.twinDaggers()
             println("============================================")
             println()
-            name.exportSave()
+            name.levelOrSave
           }
         } catch {
           case fnf: FileNotFoundException =>
@@ -119,7 +119,7 @@ object Engine extends App {
           else name.twinDaggers()
           println("============================================")
           println()
-          name.Save
+          name.levelOrSave
         } catch {
           case e: Exception =>
             println()
@@ -231,6 +231,12 @@ object Engine extends App {
     println("What is the name of the Character you wish to import?")
     println()
     val importName = StdIn.readLine().toLowerCase.split('_').map(_.capitalize).mkString("_")
+    if (pattern.findFirstIn(importName) != None) {
+      println("Invalid Name.")
+      println("(Names may only contain letters, numbers and underscores)")
+      println()
+      transformCharacter()
+    }
     val string = getCharacter(collection.find(equal("Name", importName))).toString.stripSuffix("))")
     val list = string.split(",")
     val list1 = list.dropWhile(list.indexOf(_) < list.indexOf(importName))
