@@ -21,6 +21,7 @@ object Engine extends App {
   val db = client.getDatabase("characterdb").withCodecRegistry(codecRegistry)
   val collection : MongoCollection[Import] = db.getCollection("characters")
   val pattern = "(\\W)".r
+
   def newCharacter: Unit = {
     println("Enter your new character's name:")
     var newName: String = StdIn.readLine()
