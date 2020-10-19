@@ -20,11 +20,17 @@ object Engine extends App {
   val client = MongoClient()
   val db = client.getDatabase("characterdb").withCodecRegistry(codecRegistry)
   val collection : MongoCollection[Import] = db.getCollection("characters")
-
+  val pattern = "(\\W)".r
   def newCharacter: Unit = {
     println("Enter your new character's name:")
     var newName: String = StdIn.readLine()
-    newName = newName.toLowerCase.split(' ').map(_.capitalize).mkString(" ")
+    if (pattern.findFirstIn(newName) != None){
+      println("Invalid Name.")
+      println("(Names may only contain letters, numbers and underscores)")
+      println()
+      newCharacter
+    }
+    newName = newName.toLowerCase.split("_").map(_.capitalize).mkString("_")
     println("Choose a class:")
     println("1. Warrior")
     println("2. Mage")
@@ -67,7 +73,13 @@ object Engine extends App {
         println("What is the name of the character you wish to import? ")
         println()
         val importName = StdIn.readLine()
-        val fileName: String = s"${importName.split(" ").map(_.trim).mkString("").toLowerCase}.csv"
+        if (pattern.findFirstIn(importName) != None){
+          println("Invalid Name.")
+          println("(Names may only contain letters, numbers and underscores)")
+          println()
+          importChar
+        }
+        val fileName: String = s"${importName.toLowerCase}.csv"
         try {
           for (line <- Source.fromFile(fileName).getLines().drop(1)) {
             val cols = line.split(",").map(_.trim)
@@ -185,7 +197,13 @@ object Engine extends App {
   def deleteCharacter: Unit = {
     println("What is the name of the Character you wish to delete?")
     println()
-    val importName = StdIn.readLine().toLowerCase.split(' ').map(_.capitalize).mkString(" ")
+    val importName = StdIn.readLine().toLowerCase.split('_').map(_.capitalize).mkString("_")
+    if (pattern.findFirstIn(importName) != None){
+      println("Invalid Name.")
+      println("(Names may only contain letters, numbers and underscores)")
+      println()
+      deleteCharacter
+    }
     if (getCharacter(collection.find(equal("Name", importName))).length > 0) {
       println("Are you sure you want to delete this character? (y or n)")
       println()
@@ -211,7 +229,7 @@ object Engine extends App {
   def transformCharacter[T](): List[String] = {
     println("What is the name of the Character you wish to import?")
     println()
-    val importName = StdIn.readLine().toLowerCase.split(' ').map(_.capitalize).mkString(" ")
+    val importName = StdIn.readLine().toLowerCase.split('_').map(_.capitalize).mkString("_")
     val string = getCharacter(collection.find(equal("Name", importName))).toString.stripSuffix("))")
     val list = string.split(",")
     val list1 = list.dropWhile(list.indexOf(_) < list.indexOf(importName))
