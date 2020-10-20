@@ -25,6 +25,7 @@ object Engine extends App {
   def newCharacter: Unit = {
     println("Enter your new character's name (or enter 'menu' to return to the menu):")
     var newName: String = StdIn.readLine()
+    println()
     if (newName == "menu") {
       newOrImport
     } else {
@@ -76,6 +77,7 @@ object Engine extends App {
     StdIn.readLine()
     match {
       case "1" => {
+        println()
         println("What is the name of the character you wish to import? ")
         println()
         val importName = StdIn.readLine()
@@ -135,7 +137,9 @@ object Engine extends App {
       }
       case "3" => println()
         newOrImport
-      case e => println("Invalid input.")
+      case e =>
+        println()
+        println("Invalid input.")
         println()
         importChar
       }
@@ -233,6 +237,7 @@ object Engine extends App {
   }
 
   def transformCharacter[T](): List[String] = {
+    println(1)
     println("What is the name of the character you wish to import?")
     println()
     val importName = StdIn.readLine().toLowerCase.split('_').map(_.capitalize).mkString("_")

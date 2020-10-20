@@ -215,17 +215,17 @@ class Character(val name: String = "", val charClass: String = "") {
   }
 
   def fireball(): Unit = {
-    println(s"Fireball: \nCost: 20 Magicka \nThe caster unleashes a ball of fire toward the targeted enemy\nthat deals ${50 * ((attrMagic * 7)*4/100)} damage minus half the target's\nMagic Defense.")
+    println(s"Fireball: \nCost: 20 Magicka \nThe caster unleashes a ball of fire toward the targeted enemy\nthat deals ${50 * ((attrMagic * 7)*3/100)} damage minus half the target's\nMagic Defense.")
     println()
   }
 
   def twinDaggers(): Unit = {
-      println(s"Twin Daggers: \nCost: 20 Stamina \nThe player attacks with three strikes in rapid succession.\nEach attack deals ${(attrStrength * 5) + (attrDexterity * 2)/2.5} damage minus half the target's\nPhysical Defense.")
+      println(s"Twin Daggers: \nCost: 20 Stamina \nThe player attacks with three strikes in rapid succession.\nEach attack deals ${(attrStrength * 5) + (attrDexterity * 2)/2.5} damage minus 33% the target's\nPhysical Defense.")
       println()
     }
 
   def cleave(): Unit = {
-    println(s"Cleave: \nCost: 20 Stamina \nThe player attacks with a heavy two-handed swing\nthat deals ${50 * ((((attrStrength * 5) + (attrDexterity * 2)) + (attrStrength)*4)/100)} damage minus half the target's\nPhysical Defense.")
+    println(s"Cleave: \nCost: 20 Stamina \nThe player attacks with a heavy two-handed swing\nthat deals ${50 * (((attrStrength * 5) + (attrDexterity * 2)*8)/100)} damage minus half the target's\nPhysical Defense.")
     println()
   }
 
